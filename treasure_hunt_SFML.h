@@ -31,135 +31,81 @@ public:
 		treasure = std::rand() % map.size();
 		//treasure = 0;
 	}
-	bool dig()
+	bool dig(sf::RenderWindow& window, sf::Event& event, int& tries)
 	{
-		int l = 0;
-		int c = 0;
-		std::string answer;
+		int x = 0;
+		int y = 0;
+		int idx = 0;
 		bool victoire = false;
-		bool dig_end = false;
-		std::string input_string;
 
 
-		while (!dig_end)
+		if (event.mouseButton.button == sf::Mouse::Button::Left && event.type == sf::Event::MouseButtonPressed)
 		{
-
-			bool valid_input;
-			bool valid_number;
-
-			do
-			{
-				do
-				{
-					valid_input = true;
-					valid_number = false;
-					std::cout << "entre ligne (un numero) entre " << 1 << "-" << map_lenght << std::endl;
-					std::getline(std::cin, input_string);
-
-					// Check if it's a number or not
-					if (input_string.length() == 0 || !std::all_of(input_string.begin(), input_string.end(), ::isdigit))
-					{
-						system("cls");
-						std::cout << input_string << " n'est pas un nombre" << std::endl;
-						valid_input = false;
-						display();
-					}
-					if (valid_input)
-					{
-						// Checks if number is between 1 and array size
-						l = std::stoi(input_string);
-						if (l > map_lenght || l < 1)
-						{
-							system("cls");
-							valid_number = true;
-							std::cout << "Ce n'est pas un chiffre entre 1-" << map_lenght << std::endl;
-							display();
-						}
-					}
-				} while (valid_number);
-
-			} while (!valid_input);
-
-
-			do
-			{
-				do
-				{
-					valid_input = true;
-					valid_number = false;
-					std::cout << "entre colonne (un numero) entre " << 1 << "-" << map_height << std::endl;
-					std::getline(std::cin, input_string);
-
-					// Check if it's a number or not
-					if (input_string.length() == 0 || !std::all_of(input_string.begin(), input_string.end(), ::isdigit))
-					{
-						system("cls");
-						std::cout << input_string << " n'est pas un nombre" << std::endl;
-						display();
-						valid_input = false;
-					}
-					if (valid_input)
-					{
-						// Checks if number is between 1 and array size
-						c = std::stoi(input_string);
-						if (c > map_lenght || c < 1)
-						{
-							system("cls");
-							valid_number = true;
-							std::cout << "Ce n'est pas un chiffre entre 1-" << map_lenght << std::endl;
-							display();
-						}
-					}
-				} while (valid_number);
-
-			} while (!valid_input);
-
-
-			int idx = (l - 1) * map_lenght + (c - 1);
+			x = (sf::Mouse::getPosition(window).x / 100);
+			y = (sf::Mouse::getPosition(window).y / 100);
+			idx = x + (map_lenght * y);
 
 			if (map.at(idx) == Tiles::k_empty_digged)
 			{
 				system("cls");
 				std::cout << "La case choisie a deja ete creuser !!\n";
-				display();
 			}
 			else if (idx == treasure)
 			{
 				map.at(idx) = Tiles::k_treasure;
-				dig_end = true;
 				victoire = true;
+				tries++;
 			}
 			else
 			{
 				map.at(idx) = Tiles::k_empty_digged;
-				dig_end = true;
+				tries++;
 			}
 		}
+
+		
 		return victoire;
 
 	}
-	void display()
+	void display_SFML(sf::RenderWindow& window)
 	{
+		std::array<sf::RectangleShape, map_size> arr;
+		sf::RectangleShape temp(sf::Vector2f(90, 90));
+		temp.setOutlineThickness(5);
+
 		for (int idx = 0; idx < (int)map.size(); idx++)
 		{
 			switch ((int)map.at(idx))
 			{
 			case 0:
-				std::cout << "X ";
+				temp.setFillColor(sf::Color::White);
+				temp.setOutlineColor(sf::Color::Black);
+				arr.at(idx) = temp;
 				break;
 			case 1:
-				std::cout << "O ";
+				temp.setFillColor(sf::Color::Black);
+				temp.setOutlineColor(sf::Color::White);
+				arr.at(idx) = temp;
 				break;
 			case 2:
-				std::cout << "$ ";
+				temp.setFillColor(sf::Color::Yellow);
+				temp.setOutlineColor(sf::Color::Green);
+				arr.at(idx) = temp;
 				break;
 			}
+		}
 
-			if (idx % map_lenght == map_lenght - 1)
+		window.clear();
+		for (int i = 0; i < map_height; i++)
+		{
+			for (int j = 0;  j < map_lenght;  j++)
 			{
-				std::cout << "\n";
+				arr.at(j + (map_lenght * i)).setPosition(10+j*100,10+i * 100);
+				window.draw(arr.at(j + (map_lenght * i)));
 			}
 		}
+		window.display();
+
 	}
 };
 

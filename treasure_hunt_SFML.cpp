@@ -10,50 +10,51 @@
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML treasure hunt!");
+	
+	sf::RenderWindow window(sf::VideoMode(510, 510), "SFML treasure hunt!");
 	sf::Event event;
 
-	while (window.isOpen())
+	std::srand(std::time(nullptr));
+
+	bool victoire;
+	const int tries_ = 100;
+	int tries = 0;
+	Map map;
+
+	map.initialize();
+	map.place_treasure();
+
+	while (tries < tries_)
 	{
-		while (window.pollEvent(event))
+		while (window.isOpen())
 		{
-			if (event.type == sf::Event::Closed)
+			map.display_SFML(window);
+
+			while(window.pollEvent(event))
 			{
-				window.close();
+				if (event.type == sf::Event::Closed)
+				{
+					window.close();
+				}
+
+				victoire = map.dig(window,event,tries);
+
+				if (tries >= tries_ && !victoire)
+				{
+					window.close();
+					std::cout << "Bravo vous avez perdu\n";
+				}
+				if (victoire)
+				{
+					window.close();
+					std::cout << "Bravo vous avez gagner\n";
+				}
 			}
 		}
-
-		std::srand(std::time(nullptr));
-
-		bool victoire;
-		const int tries_ = 10;
-
-		Map map;
-
-		map.initialize();
-		map.place_treasure();
-
-		for (int tries = 1; tries <= tries_; tries++)
-		{
-			map.display();
-			victoire = map.dig();
-
-			system("cls");
-			if (tries >= tries_ && !victoire)
-			{
-				std::cout << "Bravo vous avez perdu\n";
-			}
-			else if (victoire)
-			{
-				std::cout << "Bravo vous avez gagner\n";
-				tries = tries_;
-			}
-
-
-		}
-		map.display();
+		map.display_SFML(window);
 		std::cout << "Fin de partie\n";
 		system("pause");
+
 	}
 
 }
