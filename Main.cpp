@@ -22,6 +22,22 @@ int main()
 	float counter = 0;
 	sf::Clock clock;
 
+	sf::Font font;
+	if (!font.loadFromFile("Assets\\BrownieStencil.ttf"))
+	{
+
+	}
+
+	sf::Text shutdown_text;
+	shutdown_text.setFont(font);
+	shutdown_text.setPosition(75, 250);
+	shutdown_text.setCharacterSize(25);
+	shutdown_text.setFillColor(sf::Color::Red);
+
+	
+
+
+
 	Map map;
 
 	map.initialize();
@@ -47,19 +63,25 @@ int main()
 			}
 			map.SFML_actualize(window, arr);
 		}
+
+		window.clear();
+		map.display_SFML(window, tries, arr);
+
 		if (victoire)
 		{
 			counter += dt;
+			int count_down = 5 - counter;
+			std::string str = "The Game will shut down in ";
+
+			str.append(std::to_string(count_down));
+			shutdown_text.setString(str);
+
+			window.draw(shutdown_text); // doesn't draw (why?????????????)
 			if (counter > 5)
 				window.close();
-
 		}
 
 		dt = clock.restart().asSeconds();
-
-		window.clear();
-
-		map.display_SFML(window, tries, arr);
 
 		if (tries >= tries_ && !victoire)
 		{

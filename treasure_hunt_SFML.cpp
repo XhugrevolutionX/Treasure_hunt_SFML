@@ -108,7 +108,7 @@ void Map::end(sf::RenderWindow& window, bool victory_)
 
 	sf::Text end_text;
 	end_text.setFont(font);
-	end_text.setPosition(175, 250);
+	end_text.setPosition(175, 150);
 	end_text.setCharacterSize(50);
 	end_text.setFillColor(sf::Color::Red);
 
@@ -121,14 +121,5 @@ void Map::end(sf::RenderWindow& window, bool victory_)
 		end_text.setString("Defeat");
 	}
 
-	sf::Text shutdown_text;
-	shutdown_text.setFont(font);
-	shutdown_text.setPosition(20, 350);
-	shutdown_text.setCharacterSize(25);
-	shutdown_text.setFillColor(sf::Color::Red);
-	shutdown_text.setString("The Game will shut down in 5 seconds");
-
-
-	window.draw(end_text); 
-	window.draw(shutdown_text);
+	window.draw(end_text);
 }
