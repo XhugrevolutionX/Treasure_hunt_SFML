@@ -1,9 +1,8 @@
 #include <iostream>
-#include <vector>
 #include <array>
+#include <vector>
 #include <algorithm>
 #include <string>
-#include "SFML/Graphics.hpp"
 #include "treasure_hunt_SFML.h"
 
 int main()
@@ -11,20 +10,26 @@ int main()
 	
 	sf::RenderWindow window(sf::VideoMode(510, 510), "SFML treasure hunt!");
 	sf::Event event;
+	std::array<sf::RectangleShape, map_size> arr;
 
 	std::srand(std::time(nullptr));
 
-	bool victoire;
+	bool victoire = false;
 	const int tries_ = 100;
 	int tries = 0;
+
+	float dt = 0.0f;
+	float counter = 0;
+	sf::Clock clock;
+
 	Map map;
 
 	map.initialize();
 	map.place_treasure();
-	map.display_SFML(window, tries);
 
 	while (window.isOpen())
 	{
+
 		while(window.pollEvent(event))
 		{
 
@@ -33,22 +38,40 @@ int main()
 				window.close();
 			}
 
-
-			victoire = map.dig(window, event, tries);
-			map.display_SFML(window, tries);
-
-
-			if (tries >= tries_ && !victoire)
+			if (event.mouseButton.button == sf::Mouse::Button::Left && event.type == sf::Event::MouseButtonReleased)
 			{
-				std::cout << "Bravo vous avez perdu\n";
-				map.end(window, false);
+				if (!victoire)
+				{
+					victoire = map.dig(tries, event.mouseButton.x, event.mouseButton.y);
+				}
 			}
-			if (victoire)
-			{
-				std::cout << "Bravo vous avez gagner\n";
-				map.end(window, true);
-			}
+			map.SFML_actualize(window, arr);
 		}
+		if (victoire)
+		{
+			counter += dt;
+			if (counter > 5)
+				window.close();
+
+		}
+
+		dt = clock.restart().asSeconds();
+
+		window.clear();
+
+		map.display_SFML(window, tries, arr);
+
+		if (tries >= tries_ && !victoire)
+		{
+			map.end(window, false);
+		}
+		if (victoire)
+		{
+			map.end(window, true);
+		}
+
+
+		window.display();
 	}
 	std::cout << "Fin de partie\n";
 }

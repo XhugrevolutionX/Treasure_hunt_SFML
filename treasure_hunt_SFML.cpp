@@ -3,6 +3,10 @@
 #include "treasure_hunt_SFML.h"
 #include "SFML/Graphics.hpp"
 
+constexpr int square_size = 90;
+constexpr int border_size = 5;
+int full_size = square_size + (2 * border_size);
+
 void Map::initialize()
 {
 	map.fill(Tiles::k_not_digged);
@@ -12,61 +16,37 @@ void Map::place_treasure()
 	treasure = std::rand() % map.size();
 	//treasure = 0;
 }
-bool Map::dig(sf::RenderWindow& window, sf::Event& event, int& tries)
+bool Map::dig(int& tries, int mouse_x, int mouse_y)
 {
-	int x = 0;
-	int y = 0;
-	int idx = 0;
+	int x = (mouse_x / full_size);
+	int y = (mouse_y / full_size);
+	int idx = x + (map_lenght * y);
 	bool victoire = false;
 
-
-	if (event.mouseButton.button == sf::Mouse::Button::Left && event.type == sf::Event::MouseButtonPressed)
+	if (map.at(idx) == Tiles::k_empty_digged)
 	{
-		x = (sf::Mouse::getPosition(window).x / 100);
-		y = (sf::Mouse::getPosition(window).y / 100);
-		idx = x + (map_lenght * y);
-
-		if (map.at(idx) == Tiles::k_empty_digged)
-		{
-			system("cls");
-			std::cout << "La case choisie a deja ete creuser !!\n";
-		}
-		else if (idx == treasure)
-		{
-			map.at(idx) = Tiles::k_treasure;
-			victoire = true;
-			tries++;
-		}
-		else
-		{
-			map.at(idx) = Tiles::k_empty_digged;
-			tries++;
-		}
+		system("cls");
+		std::cout << "La case choisie a deja ete creuser !!\n";
 	}
-
+	else if (idx == treasure)
+	{
+		map.at(idx) = Tiles::k_treasure;
+		victoire = true;
+		tries++;
+	}
+	else
+	{
+		map.at(idx) = Tiles::k_empty_digged;
+		tries++;
+	}
 
 	return victoire;
 
 }
-void Map::display_SFML(sf::RenderWindow& window, int& tries)
+void Map::SFML_actualize(sf::RenderWindow& window, std::array<sf::RectangleShape, map_size>& arr)
 {
-	std::array<sf::RectangleShape, map_size> arr;
-	sf::RectangleShape temp(sf::Vector2f(90, 90));
-	temp.setOutlineThickness(5);
-
-	sf::Font font;
-	if (!font.loadFromFile("Assets\\BrownieStencil.ttf"))
-	{
-
-	}
-
-	sf::Text text;
-	text.setFont(font);
-	text.setPosition(450, 10);
-	text.setCharacterSize(50);
-	text.setFillColor(sf::Color::Red);
-	std::string str = std::to_string(tries);
-	text.setString(str);
+	sf::RectangleShape temp(sf::Vector2f(square_size, square_size));
+	temp.setOutlineThickness(border_size);
 
 	for (int idx = 0; idx < (int)map.size(); idx++)
 	{
@@ -89,22 +69,9 @@ void Map::display_SFML(sf::RenderWindow& window, int& tries)
 			break;
 		}
 	}
-
-	window.clear();
-	for (int i = 0; i < map_height; i++)
-	{
-		for (int j = 0; j < map_lenght; j++)
-		{
-			arr.at(j + (map_lenght * i)).setPosition(10 + j * 100, 10 + i * 100);
-			window.draw(arr.at(j + (map_lenght * i)));
-		}
-	}
-	window.draw(text);
-	window.display();
-
 }
 
-void Map::end(sf::RenderWindow& window, bool victory_)
+void Map::display_SFML(sf::RenderWindow& window, int& tries, std::array<sf::RectangleShape, map_size>& arr)
 {
 	sf::Font font;
 	if (!font.loadFromFile("Assets\\BrownieStencil.ttf"))
@@ -114,32 +81,54 @@ void Map::end(sf::RenderWindow& window, bool victory_)
 
 	sf::Text text;
 	text.setFont(font);
-	text.setPosition(175, 250);
+	text.setPosition(450, 10);
 	text.setCharacterSize(50);
 	text.setFillColor(sf::Color::Red);
+	std::string str = std::to_string(tries);
+	text.setString(str);
+
+	window.clear();
+	for (int i = 0; i < map_height; i++)
+	{
+		for (int j = 0; j < map_lenght; j++)
+		{
+			arr.at(j + (map_lenght * i)).setPosition(10 + j * full_size, 10 + i * full_size);
+			window.draw(arr.at(j + (map_lenght * i)));
+		}
+	}
+	window.draw(text);
+}
+void Map::end(sf::RenderWindow& window, bool victory_)
+{
+	sf::Font font;
+	if (!font.loadFromFile("Assets\\BrownieStencil.ttf"))
+	{
+
+	}
+
+	sf::Text end_text;
+	end_text.setFont(font);
+	end_text.setPosition(175, 250);
+	end_text.setCharacterSize(50);
+	end_text.setFillColor(sf::Color::Red);
 
 	if (victory_)
 	{
-		text.setString("Victory");
+		end_text.setString("Victory");
 	}
 	else
 	{
-		text.setString("Defeat");
+		end_text.setString("Defeat");
 	}
 
-	window.clear();
-	window.draw(text);
-	window.display();
+	sf::Text shutdown_text;
+	shutdown_text.setFont(font);
+	shutdown_text.setPosition(20, 350);
+	shutdown_text.setCharacterSize(25);
+	shutdown_text.setFillColor(sf::Color::Red);
+	shutdown_text.setString("The Game will shut down in 5 seconds");
 
-	sf::Event event;
-	while (window.isOpen())
-	{
-		while (window.pollEvent(event))
-		{
-			if (event.type == event.MouseButtonPressed || event.type == sf::Event::Closed)
-			{
-				window.close();
-			}
-		}
-	}
+
+	window.draw(end_text); 
+	window.draw(shutdown_text);
 }

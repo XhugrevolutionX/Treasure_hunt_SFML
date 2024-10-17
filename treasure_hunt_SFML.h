@@ -24,10 +24,11 @@ public:
 
 	void initialize();
 	void place_treasure();
-	bool dig(sf::RenderWindow& window, sf::Event& event, int& tries);
+	bool dig(int& tries, int mouse_x, int mouse_y);
 
-	void display_SFML(sf::RenderWindow& window, int& tries);
+	void SFML_actualize(sf::RenderWindow& window, std::array<sf::RectangleShape, map_size>& arr);
 
+	void display_SFML(sf::RenderWindow& window, int& tries, std::array<sf::RectangleShape, map_size>& arr);
 	void end(sf::RenderWindow& window, bool victory_);
 };
 
