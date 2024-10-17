@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="treasure_hunt_SFML.cpp" />
   </ItemGroup>
   <ItemGroup>
