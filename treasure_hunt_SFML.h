@@ -26,10 +26,10 @@ public:
 	void place_treasure();
 	bool dig(int& tries, int mouse_x, int mouse_y);
 
-	void SFML_actualize(sf::RenderWindow& window, std::array<sf::RectangleShape, map_size>& arr);
+	void SFML_actualize(sf::RenderWindow& window, std::array<sf::Sprite, map_size>& arr);
 
-	void display_SFML(sf::RenderWindow& window, int& tries, std::array<sf::RectangleShape, map_size>& arr);
-	void end(sf::RenderWindow& window, bool victory_);
+	void display_SFML(sf::RenderWindow& window, int& tries, std::array<sf::Sprite, map_size>& arr);
+	void end(sf::RenderWindow& window, bool victory_, float& counter_, float& dt_);
 };
 
 #endif // TREASURE_HUNT_H

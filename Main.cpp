@@ -8,14 +8,14 @@
 int main()
 {
 	
-	sf::RenderWindow window(sf::VideoMode(510, 510), "SFML treasure hunt!");
+	sf::RenderWindow window(sf::VideoMode(540, 540), "SFML treasure hunt!");
 	sf::Event event;
-	std::array<sf::RectangleShape, map_size> arr;
+	std::array<sf::Sprite, map_size> arr;
 
 	std::srand(std::time(nullptr));
 
 	bool victoire = false;
-	const int tries_ = 100;
+	const int max_tries = 15;
 	int tries = 0;
 
 	float dt = 0.0f;
@@ -27,16 +27,6 @@ int main()
 	{
 
 	}
-
-	sf::Text shutdown_text;
-	shutdown_text.setFont(font);
-	shutdown_text.setPosition(75, 250);
-	shutdown_text.setCharacterSize(25);
-	shutdown_text.setFillColor(sf::Color::Red);
-
-	
-
-
 
 	Map map;
 
@@ -56,7 +46,7 @@ int main()
 
 			if (event.mouseButton.button == sf::Mouse::Button::Left && event.type == sf::Event::MouseButtonReleased)
 			{
-				if (!victoire)
+				if (!victoire && tries < max_tries)
 				{
 					victoire = map.dig(tries, event.mouseButton.x, event.mouseButton.y);
 				}
@@ -67,33 +57,25 @@ int main()
 		window.clear();
 		map.display_SFML(window, tries, arr);
 
+		if (tries >= max_tries && !victoire)
+		{
+			map.end(window, false, counter, dt);
+		}
 		if (victoire)
 		{
-			counter += dt;
-			int count_down = 5 - counter;
-			std::string str = "The Game will shut down in ";
-
-			str.append(std::to_string(count_down));
-			shutdown_text.setString(str);
-
-			window.draw(shutdown_text); // doesn't draw (why?????????????)
-			if (counter > 5)
-				window.close();
+			map.end(window, true, counter, dt);
 		}
+
+		if (counter > 5)
+		{
+			window.close();
+		}
+
 
 		dt = clock.restart().asSeconds();
-
-		if (tries >= tries_ && !victoire)
-		{
-			map.end(window, false);
-		}
-		if (victoire)
-		{
-			map.end(window, true);
-		}
-
 
 		window.display();
 	}
 	std::cout << "Fin de partie\n";
+
 }
