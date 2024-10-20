@@ -19,14 +19,13 @@ void Map::initialize()
 	digged_ground.loadFromFile("Assets\\Digged_ground.png");
 	chest.loadFromFile("Assets\\Chest.png");
 
-	ground_size_x = ground.getSize().x * 0.2 + 5;
-	ground_size_y = ground.getSize().y * 0.2 + 5;
+	ground_size_x = ground.getSize().x * 5 + 5;
+	ground_size_y = ground.getSize().y * 5 + 5;
 	ground_size = ground_size_x * ground_size_y;
 }
 void Map::place_treasure()
 {
 	treasure = std::rand() % map.size();
-	//treasure = 0;
 }
 bool Map::dig(int& tries, int mouse_x, int mouse_y)
 {
@@ -75,7 +74,7 @@ void Map::SFML_actualize(sf::RenderWindow& window, std::array<sf::Sprite, map_si
 			arr.at(idx) = temp;
 			break;
 		}
-		arr.at(idx).setScale(0.2, 0.2);
+		arr.at(idx).setScale(5, 5);
 	}
 }
 
@@ -89,7 +88,7 @@ void Map::display_SFML(sf::RenderWindow& window, int& tries, std::array<sf::Spri
 
 	sf::Text text;
 	text.setFont(font);
-	text.setPosition(500, 10);
+	text.setPosition(780, 10);
 	text.setCharacterSize(50);
 	text.setFillColor(sf::Color::Red);
 	std::string str = std::to_string(tries);
@@ -117,7 +116,7 @@ void Map::end(sf::RenderWindow& window, bool victory_, float& counter_, float& d
 
 	sf::Text end_text;
 	end_text.setFont(font);
-	end_text.setPosition(200, 150);
+	end_text.setPosition(330, 345);
 	end_text.setCharacterSize(50);
 	end_text.setFillColor(sf::Color::Red);
 
@@ -135,12 +134,12 @@ void Map::end(sf::RenderWindow& window, bool victory_, float& counter_, float& d
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setSize({ 375, 150 });
 	rect.setOutlineThickness(5);
-	rect.setPosition(95, 145);
+	rect.setPosition(220, 335);
 
 
 	sf::Text shutdown_text;
 	shutdown_text.setFont(font);
-	shutdown_text.setPosition(100, 250);
+	shutdown_text.setPosition(230, 435);
 	shutdown_text.setCharacterSize(25);
 	shutdown_text.setFillColor(sf::Color::Red);
 

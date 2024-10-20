@@ -8,7 +8,7 @@
 int main()
 {
 	
-	sf::RenderWindow window(sf::VideoMode(540, 540), "SFML treasure hunt!");
+	sf::RenderWindow window(sf::VideoMode(830, 830), "SFML treasure hunt!");
 	sf::Event event;
 	std::array<sf::Sprite, map_size> arr;
 
