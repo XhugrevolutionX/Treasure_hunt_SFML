@@ -11,7 +11,7 @@ sf::Texture chest;
 int ground_size_x;
 int ground_size_y;
 int ground_size;
-void Map::initialize()
+void Map::Initialize()
 {
 	map.fill(Tiles::k_not_digged);
 
@@ -23,11 +23,11 @@ void Map::initialize()
 	ground_size_y = ground.getSize().y * 5 + 5;
 	ground_size = ground_size_x * ground_size_y;
 }
-void Map::place_treasure()
+void Map::Place_treasure()
 {
 	treasure = std::rand() % map.size();
 }
-bool Map::dig(int& tries, int mouse_x, int mouse_y)
+bool Map::Dig(int& tries, int mouse_x, int mouse_y)
 {
 	int x = (mouse_x / ground_size_x);
 	int y = (mouse_y / ground_size_x);
@@ -54,7 +54,8 @@ bool Map::dig(int& tries, int mouse_x, int mouse_y)
 	return victoire;
 
 }
-void Map::SFML_actualize(sf::RenderWindow& window, std::array<sf::Sprite, map_size>& arr)
+
+void Map::Grid_actualize(sf::RenderWindow& window, std::array<sf::Sprite, map_size>& arr)
 {
 	sf::Sprite temp;
 	for (int idx = 0; idx < (int)map.size(); idx++)
@@ -77,8 +78,7 @@ void Map::SFML_actualize(sf::RenderWindow& window, std::array<sf::Sprite, map_si
 		arr.at(idx).setScale(5, 5);
 	}
 }
-
-void Map::display_SFML(sf::RenderWindow& window, int& tries, std::array<sf::Sprite, map_size>& arr)
+void Map::Grid_draw(sf::RenderWindow& window, int& tries, int max_tries, std::array<sf::Sprite, map_size>& arr)
 {
 	sf::Font font;
 	if (!font.loadFromFile("Assets\\BrownieStencil.ttf"))
@@ -88,10 +88,12 @@ void Map::display_SFML(sf::RenderWindow& window, int& tries, std::array<sf::Spri
 
 	sf::Text text;
 	text.setFont(font);
-	text.setPosition(780, 10);
+	text.setPosition(730, 10);
 	text.setCharacterSize(50);
-	text.setFillColor(sf::Color::Red);
+	text.setFillColor(sf::Color::White);
 	std::string str = std::to_string(tries);
+	str.append("/");
+	str.append(std::to_string(max_tries));
 	text.setString(str);
 
 
@@ -106,8 +108,15 @@ void Map::display_SFML(sf::RenderWindow& window, int& tries, std::array<sf::Spri
 	}
 	window.draw(text);
 }
-void Map::end(sf::RenderWindow& window, bool victory_, float& counter_, float& dt_)
+void Map::End_draw(sf::RenderWindow& window, bool victory_, float& counter_, float& dt_)
 {
+	sf::RectangleShape rect;
+	rect.setFillColor(sf::Color::White);
+	rect.setOutlineColor(sf::Color::Black);
+	rect.setSize({ 375, 150 });
+	rect.setOutlineThickness(5);
+	rect.setPosition(220, 335);
+
 	sf::Font font;
 	if (!font.loadFromFile("Assets\\BrownieStencil.ttf"))
 	{
@@ -129,14 +138,6 @@ void Map::end(sf::RenderWindow& window, bool victory_, float& counter_, float& d
 		end_text.setString("Defeat");
 	}
 
-	sf::RectangleShape rect;
-	rect.setFillColor(sf::Color::White);
-	rect.setOutlineColor(sf::Color::Black);
-	rect.setSize({ 375, 150 });
-	rect.setOutlineThickness(5);
-	rect.setPosition(220, 335);
-
-
 	sf::Text shutdown_text;
 	shutdown_text.setFont(font);
 	shutdown_text.setPosition(230, 435);
@@ -145,8 +146,8 @@ void Map::end(sf::RenderWindow& window, bool victory_, float& counter_, float& d
 
 	counter_ += dt_;
 	int count_down = 5 - counter_;
-	std::string str = "The Game will shut down in ";
 
+	std::string str = "The Game will shut down in ";
 	str.append(std::to_string(count_down));
 	shutdown_text.setString(str);
 

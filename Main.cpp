@@ -30,8 +30,8 @@ int main()
 
 	Map map;
 
-	map.initialize();
-	map.place_treasure();
+	map.Initialize();
+	map.Place_treasure();
 
 	while (window.isOpen())
 	{
@@ -48,22 +48,21 @@ int main()
 			{
 				if (!victoire && tries < max_tries)
 				{
-					victoire = map.dig(tries, event.mouseButton.x, event.mouseButton.y);
+					victoire = map.Dig(tries, event.mouseButton.x, event.mouseButton.y);
 				}
 			}
-			map.SFML_actualize(window, arr);
+			map.Grid_actualize(window, arr);
 		}
-
 		window.clear();
-		map.display_SFML(window, tries, arr);
+		map.Grid_draw(window, tries, max_tries, arr);
 
 		if (tries >= max_tries && !victoire)
 		{
-			map.end(window, false, counter, dt);
+			map.End_draw(window, false, counter, dt);
 		}
 		if (victoire)
 		{
-			map.end(window, true, counter, dt);
+			map.End_draw(window, true, counter, dt);
 		}
 
 		if (counter > 5)
@@ -73,6 +72,7 @@ int main()
 
 
 		dt = clock.restart().asSeconds();
+
 
 		window.display();
 	}

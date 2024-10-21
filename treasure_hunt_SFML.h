@@ -22,14 +22,13 @@ public:
 
 	std::array<Tiles, map_size> map;
 
-	void initialize();
-	void place_treasure();
-	bool dig(int& tries, int mouse_x, int mouse_y);
+	void Initialize();
+	void Place_treasure();
 
-	void SFML_actualize(sf::RenderWindow& window, std::array<sf::Sprite, map_size>& arr);
-
-	void display_SFML(sf::RenderWindow& window, int& tries, std::array<sf::Sprite, map_size>& arr);
-	void end(sf::RenderWindow& window, bool victory_, float& counter_, float& dt_);
+	bool Dig(int& tries, int mouse_x, int mouse_y);
+	void Grid_actualize(sf::RenderWindow& window, std::array<sf::Sprite, map_size>& arr);
+	void Grid_draw(sf::RenderWindow& window, int& tries, int max_tries, std::array<sf::Sprite, map_size>& arr);
+	void End_draw(sf::RenderWindow& window, bool victory_, float& counter_, float& dt_);
 };
 
 #endif // TREASURE_HUNT_H
