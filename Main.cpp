@@ -22,12 +22,6 @@ int main()
 	float counter = 0;
 	sf::Clock clock;
 
-	sf::Font font;
-	if (!font.loadFromFile("Assets\\BrownieStencil.ttf"))
-	{
-
-	}
-
 	Map map;
 
 	map.Initialize();
@@ -64,7 +58,6 @@ int main()
 		{
 			map.End_draw(window, true, counter, dt);
 		}
-
 		if (counter > 5)
 		{
 			window.close();
@@ -76,6 +69,4 @@ int main()
 
 		window.display();
 	}
-	std::cout << "Fin de partie\n";
-
 }

@@ -3,7 +3,6 @@
 #include "treasure_hunt_SFML.h"
 #include "SFML/Graphics.hpp"
 
-
 sf::Texture ground;
 sf::Texture digged_ground;
 sf::Texture chest;
