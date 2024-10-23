@@ -17,10 +17,10 @@ int main()
 	float counter = 0;
 	sf::Clock clock;
 
-	Map map;
+	map map;
 
-	map.Initialize();
-	map.Place_treasure();
+	map.initialize();
+	map.place_treasure();
 
 	while (window.isOpen())
 	{
@@ -37,21 +37,21 @@ int main()
 			{
 				if (!victoire && tries < max_tries)
 				{
-					victoire = map.Dig(tries, event.mouseButton.x, event.mouseButton.y);
+					victoire = map.dig(tries, event.mouseButton.x, event.mouseButton.y);
 				}
 			}
-			map.Grid_actualize(window, arr);
+			map.grid_actualize(window, arr);
 		}
 		window.clear();
-		map.Grid_draw(window, tries, max_tries, arr);
+		map.grid_draw(window, tries, max_tries, arr);
 
 		if (tries >= max_tries && !victoire)
 		{
-			map.End_draw(window, false, counter, dt);
+			map.end_draw(window, false, counter, dt);
 		}
 		if (victoire)
 		{
-			map.End_draw(window, true, counter, dt);
+			map.end_draw(window, true, counter, dt);
 		}
 		if (counter > 5)
 		{

@@ -4,49 +4,49 @@
 #include "SFML/Graphics.hpp"
 
 sf::Texture ground;
-sf::Texture digged_ground;
+sf::Texture dug_ground;
 sf::Texture chest;
 
 int ground_size_x;
 int ground_size_y;
 int ground_size;
-void Map::Initialize()
+void map::initialize()
 {
-	map.fill(Tiles::k_not_digged);
+	tile_map.fill(tiles::k_not_dug);
 
 	ground.loadFromFile("Assets\\Ground.png");
-	digged_ground.loadFromFile("Assets\\Digged_ground.png");
+	dug_ground.loadFromFile("Assets\\Dug_ground.png");
 	chest.loadFromFile("Assets\\Chest.png");
 
 	ground_size_x = ground.getSize().x * 5 + 5;
 	ground_size_y = ground.getSize().y * 5 + 5;
 	ground_size = ground_size_x * ground_size_y;
 }
-void Map::Place_treasure()
+void map::place_treasure()
 {
-	treasure = std::rand() % map.size();
+	treasure = std::rand() % tile_map.size();
 }
-bool Map::Dig(int& tries, int mouse_x, int mouse_y)
+bool map::dig(int& tries, int mouse_x, int mouse_y)
 {
 	int x = (mouse_x / ground_size_x);
 	int y = (mouse_y / ground_size_x);
-	int idx = x + (map_lenght * y);
+	int idx = x + (map_length * y);
 	bool victoire = false;
 
-	if (map.at(idx) == Tiles::k_empty_digged)
+	if (tile_map.at(idx) == tiles::k_empty_dug)
 	{
 		system("cls");
-		std::cout << "La case choisie a deja ete creuser !!\n";
+		std::cout << "Chosen tile already dug !!\n";
 	}
 	else if (idx == treasure)
 	{
-		map.at(idx) = Tiles::k_treasure;
+		tile_map.at(idx) = tiles::k_treasure;
 		victoire = true;
 		tries++;
 	}
 	else
 	{
-		map.at(idx) = Tiles::k_empty_digged;
+		tile_map.at(idx) = tiles::k_empty_dug;
 		tries++;
 	}
 
@@ -54,30 +54,30 @@ bool Map::Dig(int& tries, int mouse_x, int mouse_y)
 
 }
 
-void Map::Grid_actualize(sf::RenderWindow& window, std::array<sf::Sprite, map_size>& arr)
+void map::grid_actualize(sf::RenderWindow& window, std::array<sf::Sprite, map_size>& sprite_map)
 {
 	sf::Sprite temp;
-	for (int idx = 0; idx < (int)map.size(); idx++)
+	for (int idx = 0; idx < (int)tile_map.size(); idx++)
 	{
-		switch ((int)map.at(idx))
+		switch ((int)tile_map.at(idx))
 		{
 		case 0:
 			temp.setTexture(ground, true);
-			arr.at(idx) = temp;
+			sprite_map.at(idx) = temp;
 			break;
 		case 1:
-			temp.setTexture(digged_ground, true);
-			arr.at(idx) = temp;
+			temp.setTexture(dug_ground, true);
+			sprite_map.at(idx) = temp;
 			break;
 		case 2:
 			temp.setTexture(chest, true);
-			arr.at(idx) = temp;
+			sprite_map.at(idx) = temp;
 			break;
 		}
-		arr.at(idx).setScale(5, 5);
+		sprite_map.at(idx).setScale(5, 5);
 	}
 }
-void Map::Grid_draw(sf::RenderWindow& window, int& tries, int max_tries, std::array<sf::Sprite, map_size>& arr)
+void map::grid_draw(sf::RenderWindow& window, int& tries, int max_tries, std::array<sf::Sprite, map_size>& arr)
 {
 	sf::Font font;
 	if (!font.loadFromFile("Assets\\BrownieStencil.ttf"))
@@ -99,15 +99,15 @@ void Map::Grid_draw(sf::RenderWindow& window, int& tries, int max_tries, std::ar
 	window.clear();
 	for (int i = 0; i < map_height; i++)
 	{
-		for (int j = 0; j < map_lenght; j++)
+		for (int j = 0; j < map_length; j++)
 		{
-			arr.at(j + (map_lenght * i)).setPosition(j * ground_size_x + 5, i * ground_size_y + 5);
-			window.draw(arr.at(j + (map_lenght * i)));
+			arr.at(j + (map_length * i)).setPosition(j * ground_size_x + 5, i * ground_size_y + 5);
+			window.draw(arr.at(j + (map_length * i)));
 		}
 	}
 	window.draw(text);
 }
-void Map::End_draw(sf::RenderWindow& window, bool victory_, float& counter_, float& dt_)
+void map::end_draw(sf::RenderWindow& window, bool victory, float& counter, float& dt)
 {
 	sf::RectangleShape rect;
 	rect.setFillColor(sf::Color::White);
@@ -128,7 +128,7 @@ void Map::End_draw(sf::RenderWindow& window, bool victory_, float& counter_, flo
 	end_text.setCharacterSize(50);
 	end_text.setFillColor(sf::Color::Red);
 
-	if (victory_)
+	if (victory)
 	{
 		end_text.setString("Victory");
 	}
@@ -143,8 +143,8 @@ void Map::End_draw(sf::RenderWindow& window, bool victory_, float& counter_, flo
 	shutdown_text.setCharacterSize(25);
 	shutdown_text.setFillColor(sf::Color::Red);
 
-	counter_ += dt_;
-	int count_down = 5 - counter_;
+	counter += dt;
+	int count_down = 5 - counter;
 
 	std::string str = "The Game will shut down in ";
 	str.append(std::to_string(count_down));
