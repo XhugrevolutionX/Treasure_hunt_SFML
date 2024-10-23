@@ -1,6 +1,5 @@
 #include <array>
 #include "treasure_hunt_SFML.h"
-
 int main()
 {
 	
