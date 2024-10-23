@@ -1,5 +1,6 @@
 #include <array>
 #include "treasure_hunt_SFML.h"
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(830, 830), "SFML treasure hunt!");
