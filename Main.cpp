@@ -1,8 +1,4 @@
-#include <iostream>
 #include <array>
-#include <vector>
-#include <algorithm>
-#include <string>
 #include "treasure_hunt_SFML.h"
 
 int main()
